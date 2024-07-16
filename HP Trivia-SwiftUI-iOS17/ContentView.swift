@@ -6,8 +6,17 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct ContentView: View {
+    //creating audio player obj
+    @State private var audioPlayer: AVAudioPlayer!
+    
+    //for animating play button
+    @State private var scalePlayButton = true
+    //for animating bg image
+    @State private var moveBackgroundImage = false
+    
     var body: some View {
         GeometryReader { geo in
             ZStack {
@@ -16,6 +25,14 @@ struct ContentView: View {
                     .resizable()
                     .frame(width: geo.size.width * 3, height: geo.size.height)
                     .padding(.top, 3) //to push the image down a little
+                    .offset(x: moveBackgroundImage ? geo.size.width/1.1 : -geo.size.width/1.1) //for bg animation movement
+                    .onAppear {
+                        withAnimation(.linear(duration: 60).repeatForever()) {
+                            //linear - left right movement animation
+                            //duration 60 - for 60 seconds it will move one side then to other side for 60 seconds
+                            moveBackgroundImage.toggle()
+                        }
+                    }
                 
                 VStack {
                     VStack {
@@ -77,6 +94,16 @@ struct ContentView: View {
                                 .clipShape(.rect(cornerRadius: 7))
                                 .shadow(radius: 5)
                         }
+                        .scaleEffect(scalePlayButton ? 1.2 : 1) //to add animation effect to this button using var "scalePlayButton"
+                        .onAppear {
+                            //to start animation of the button once it appears on the screen
+                            withAnimation(.easeInOut(duration: 1.3).repeatForever()) {
+                                //easeInOut - after 1.3 duration to play this animation
+                                //repeatForever - to repeat abv animation step forever
+                                //keep toggling "scalePlayButton" value to keep button animated
+                                scalePlayButton.toggle()
+                            }
+                        }
                         
                         
                         Spacer()
@@ -101,6 +128,22 @@ struct ContentView: View {
                    height: geo.size.height)
         }
         .ignoresSafeArea()
+        .onAppear {
+            //to start playing audio from audioplayer, once this view appears on the screen
+            playAudio()
+        }
+    }
+    
+    //fn to get music file and setting it and playing it on audio player
+    private func playAudio() {
+        //creating a pth for audio file, which needs to be played
+        let sound = Bundle.main.path(forResource: "magic-in-the-air", ofType: "mp3")
+        //assigning abv obj to audio player
+        audioPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
+        //to run this song in infinite loops use -1
+        audioPlayer.numberOfLoops = -1
+        //to play the audio player
+        audioPlayer.play()
     }
 }
 
