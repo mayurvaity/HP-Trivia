@@ -16,6 +16,8 @@ struct ContentView: View {
     @State private var scalePlayButton = true
     //for animating bg image
     @State private var moveBackgroundImage = false
+    //var for animating transitions
+    @State private var animateViewsIn = false
     
     var body: some View {
         GeometryReader { geo in
@@ -35,87 +37,138 @@ struct ContentView: View {
                     }
                 
                 VStack {
+                    //to apply animation modifers, need to add all that content in a vstack
                     VStack {
-                        //bolt image
-                        Image(systemName: "bolt.fill")
-                            .font(.largeTitle)
-                            .imageScale(.large)
-                        
-                        Text("HP")
-                            .font(.custom(Constants.hpFont, size: 70))
-                            .padding(.bottom, -50) //to bring HP and Trivia words closer
-                        
-                        Text("Trivia")
-                            .font(.custom(Constants.hpFont, size: 60))
+                        //putting all the vws involved in the animation within a if statement driven by "animateViewsIn" var
+                        if animateViewsIn {
+                            VStack {
+                                //bolt image
+                                Image(systemName: "bolt.fill")
+                                    .font(.largeTitle)
+                                    .imageScale(.large)
+                                
+                                Text("HP")
+                                    .font(.custom(Constants.hpFont, size: 70))
+                                    .padding(.bottom, -50) //to bring HP and Trivia words closer
+                                
+                                Text("Trivia")
+                                    .font(.custom(Constants.hpFont, size: 60))
+                            }
+                            .padding(.top, 70)
+                            .transition(.move(edge: .top)) //to transition in from top
+                        }
                     }
-                    .padding(.top, 70)
+                    .animation(.easeOut(duration: 0.7).delay(2), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
+                    //it is suppose to fly in right after view loads (delay of 2 sec, and duration of animation is 0.7) and stay there
                     
                     Spacer()
                     
+                    
+                    //to apply animation modifers, need to add all that content in a vstack
                     VStack {
-                        Text("Recent Scores")
-                            .font(.title2)
-                        
-                        Text("33")
-                        Text("27")
-                        Text("15")
+                        //putting all the vws involved in the animation within a if statement driven by "animateViewsIn" var
+                        if animateViewsIn {
+                            VStack {
+                                Text("Recent Scores")
+                                    .font(.title2)
+                                
+                                Text("33")
+                                Text("27")
+                                Text("15")
+                            }
+                            .font(.title3)
+                            .padding(.horizontal)
+                            .foregroundStyle(.white)
+                            .background(.black.opacity(0.7))
+                            .clipShape(.rect(cornerRadius: 15))
+                            .transition(.opacity) //to just appear use "opacity"
+                        }
                     }
-                    .font(.title3)
-                    .padding(.horizontal)
-                    .foregroundStyle(.white)
-                    .background(.black.opacity(0.7))
-                    .clipShape(.rect(cornerRadius: 15))
+                    .animation(.linear(duration: 1).delay(4), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
+                    //it is suppose to appear there right after view loads (delay of 4 sec, and duration of animation is 1) and stay there
+                    
                     
                     Spacer()
                     
                     HStack {
                         Spacer()
                         
-                        Button {
-                            //show instructions screen
-                        } label: {
-                            Image(systemName: "info.circle.fill")
-                                .font(.largeTitle)
-                                .foregroundStyle(.white)
-                                .shadow(radius: 5)
-                        }
-                        
-                        Spacer()
-                        
-                        Button {
-                            //start a new game
-                        } label: {
-                            Text("Play")
-                                .font(.largeTitle)
-                                .foregroundStyle(.white)
-                                .padding(.vertical, 7)
-                                .padding(.horizontal, 50)
-                                .background(.brown)
-                                .clipShape(.rect(cornerRadius: 7))
-                                .shadow(radius: 5)
-                        }
-                        .scaleEffect(scalePlayButton ? 1.2 : 1) //to add animation effect to this button using var "scalePlayButton"
-                        .onAppear {
-                            //to start animation of the button once it appears on the screen
-                            withAnimation(.easeInOut(duration: 1.3).repeatForever()) {
-                                //easeInOut - after 1.3 duration to play this animation
-                                //repeatForever - to repeat abv animation step forever
-                                //keep toggling "scalePlayButton" value to keep button animated
-                                scalePlayButton.toggle()
+                        //to apply animation modifers, need to add all that content in a vstack
+                        VStack {
+                            //putting all the vws involved in the animation within a if statement driven by "animateViewsIn" var
+                            if animateViewsIn {
+                                Button {
+                                    //show instructions screen
+                                } label: {
+                                    Image(systemName: "info.circle.fill")
+                                        .font(.largeTitle)
+                                        .foregroundStyle(.white)
+                                        .shadow(radius: 5)
+                                }
+                                .transition(.offset(x: -geo.size.width/4)) //to fly in from left
                             }
                         }
+                        .animation(.easeOut(duration: 0.7).delay(2.7), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
+                        //it is suppose to fly in right after view loads (delay of 2.7 sec, and duration of animation is 0.7) and stay there
                         
                         
                         Spacer()
                         
-                        Button {
-                            //show settings screen
-                        } label: {
-                            Image(systemName: "gearshape.fill")
-                                .font(.largeTitle)
-                                .foregroundStyle(.white)
-                                .shadow(radius: 5)
+                        
+                        //to apply animation modifers, need to add all that content in a vstack
+                        VStack {
+                            //putting all the vws involved in the animation within a if statement driven by "animateViewsIn" var
+                            if animateViewsIn {
+                                Button {
+                                    //start a new game
+                                } label: {
+                                    Text("Play")
+                                        .font(.largeTitle)
+                                        .foregroundStyle(.white)
+                                        .padding(.vertical, 7)
+                                        .padding(.horizontal, 50)
+                                        .background(.brown)
+                                        .clipShape(.rect(cornerRadius: 7))
+                                        .shadow(radius: 5)
+                                }
+                                .scaleEffect(scalePlayButton ? 1.2 : 1) //to add animation effect to this button using var "scalePlayButton"
+                                .onAppear {
+                                    //to start animation of the button once it appears on the screen
+                                    withAnimation(.easeInOut(duration: 1.3).repeatForever()) {
+                                        //easeInOut - after 1.3 duration to play this animation
+                                        //repeatForever - to repeat abv animation step forever
+                                        //keep toggling "scalePlayButton" value to keep button animated
+                                        scalePlayButton.toggle()
+                                    }
+                                }
+//                                .transition(.move(edge: .bottom)) //.bottom move doesn't work so need to use offset as below
+                                .transition(.offset(y: geo.size.height/3)) //to specify what kind of transition it requires
+                            }
                         }
+                        .animation(.easeOut(duration: 0.7).delay(2), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
+                        //it is suppose to fly in right after view loads (delay of 2 sec, and duration of animation is 0.7) and stay there
+                        
+                        
+                        Spacer()
+                        
+                        //to apply animation modifers, need to add all that content in a vstack
+                        VStack {
+                            //putting all the vws involved in the animation within a if statement driven by "animateViewsIn" var
+                            if animateViewsIn {
+                                Button {
+                                    //show settings screen
+                                } label: {
+                                    Image(systemName: "gearshape.fill")
+                                        .font(.largeTitle)
+                                        .foregroundStyle(.white)
+                                        .shadow(radius: 5)
+                                }
+                                .transition(.offset(x: geo.size.width/4)) //to fly in from right
+                            }
+                        }
+                        .animation(.easeOut(duration: 0.7).delay(2.7), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
+                        //it is suppose to fly in right after view loads (delay of 2.7 sec, and duration of animation is 0.7) and stay there
+                        
                         
                         Spacer()
                     }
@@ -130,7 +183,10 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear {
             //to start playing audio from audioplayer, once this view appears on the screen
-            playAudio()
+//            playAudio()
+            
+            //to enable title vws animation fying in on screen when app loads
+            animateViewsIn = true
         }
     }
     
