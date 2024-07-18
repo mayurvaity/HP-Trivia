@@ -20,6 +20,8 @@ struct ContentView: View {
     @State private var animateViewsIn = false
     //var to manage showing of instructions screen
     @State private var showInstructions = false
+    //var to manage showing of settings screen
+    @State private var showSettings = false
     
     var body: some View {
         GeometryReader { geo in
@@ -165,6 +167,8 @@ struct ContentView: View {
                             if animateViewsIn {
                                 Button {
                                     //show settings screen
+                                    //to toggle "showSettings" var to show settings screen
+                                    showSettings.toggle()
                                 } label: {
                                     Image(systemName: "gearshape.fill")
                                         .font(.largeTitle)
@@ -172,10 +176,15 @@ struct ContentView: View {
                                         .shadow(radius: 5)
                                 }
                                 .transition(.offset(x: geo.size.width/4)) //to fly in from right
+                                .sheet(isPresented: $showSettings, content: {
+                                    //showing SettingsView as Modal based on value of "showSettings" var
+                                    SettingsView()
+                                })
                             }
                         }
                         .animation(.easeOut(duration: 0.7).delay(2.7), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
                         //it is suppose to fly in right after view loads (delay of 2.7 sec, and duration of animation is 0.7) and stay there
+                        
                         
                         
                         Spacer()
