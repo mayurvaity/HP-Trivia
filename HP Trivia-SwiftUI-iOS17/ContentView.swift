@@ -18,6 +18,8 @@ struct ContentView: View {
     @State private var moveBackgroundImage = false
     //var for animating transitions
     @State private var animateViewsIn = false
+    //var to manage showing of instructions screen
+    @State private var showInstructions = false
     
     var body: some View {
         GeometryReader { geo in
@@ -99,6 +101,8 @@ struct ContentView: View {
                             if animateViewsIn {
                                 Button {
                                     //show instructions screen
+                                    //to show the instructions screen this var value need to b set to true (for this var is used in Sheet)
+                                    showInstructions.toggle()
                                 } label: {
                                     Image(systemName: "info.circle.fill")
                                         .font(.largeTitle)
@@ -106,6 +110,10 @@ struct ContentView: View {
                                         .shadow(radius: 5)
                                 }
                                 .transition(.offset(x: -geo.size.width/4)) //to fly in from left
+                                .sheet(isPresented: $showInstructions, content: {
+                                    InstructionsView()
+                                }) //sheet - to open this view as a Modal view
+                                
                             }
                         }
                         .animation(.easeOut(duration: 0.7).delay(2.7), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
