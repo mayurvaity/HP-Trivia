@@ -22,6 +22,8 @@ struct ContentView: View {
     @State private var showInstructions = false
     //var to manage showing of settings screen
     @State private var showSettings = false
+    //var to manage showing of Gameplay screen
+    @State private var playGame = false
     
     var body: some View {
         GeometryReader { geo in
@@ -131,6 +133,7 @@ struct ContentView: View {
                             if animateViewsIn {
                                 Button {
                                     //start a new game
+                                    playGame.toggle()
                                 } label: {
                                     Text("Play")
                                         .font(.largeTitle)
@@ -153,6 +156,9 @@ struct ContentView: View {
                                 }
 //                                .transition(.move(edge: .bottom)) //.bottom move doesn't work so need to use offset as below
                                 .transition(.offset(y: geo.size.height/3)) //to specify what kind of transition it requires
+                                .fullScreenCover(isPresented: $playGame, content: {
+                                    GameplayView()
+                                }) //fullScreenCover - to open vw in full screen
                             }
                         }
                         .animation(.easeOut(duration: 0.7).delay(2), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
