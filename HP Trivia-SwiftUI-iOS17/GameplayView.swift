@@ -12,6 +12,12 @@ struct GameplayView: View {
     @State private var animateViewsIn = false
     //var used to trigger celebration screen
     @State private var tappedCorrectAnswer = false
+    //var used in giving that wiggling effect to question mark
+    @State private var hintWiggle = false
+    //for animationg next level button
+    @State private var scaleNextButton = false
+    
+    @State private var movePointsToScore = false
     
     var body: some View {
         GeometryReader { geo in
@@ -61,10 +67,15 @@ struct GameplayView: View {
                                     .scaledToFit()
                                     .frame(width: 100)
                                     .foregroundStyle(.cyan)
-                                    .rotationEffect(.degrees(-15)) //to rotate image by angle in degrees
+                                    .rotationEffect(.degrees(hintWiggle ? -13 : -17)) //to rotate image by angle in degrees
                                     .padding()
                                     .padding(.leading, 20)
                                     .transition(.offset(x: -geo.size.width/2))
+                                    .onAppear {
+                                        withAnimation(.easeInOut(duration: 0.1).repeatCount(9).delay(5).repeatForever()) {
+                                            hintWiggle = true
+                                        }
+                                    } //for wiggle effect animation
                             }
                         }
                         .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
@@ -81,10 +92,15 @@ struct GameplayView: View {
                                     .frame(width: 100, height: 100)
                                     .background(.cyan)
                                     .clipShape(.rect(cornerRadius: 20))
-                                    .rotationEffect(.degrees(15))
+                                    .rotationEffect(.degrees(hintWiggle ? 13 : 17))
                                     .padding()
                                     .padding(.trailing, 20)
                                     .transition(.offset(x: geo.size.width/2))
+                                    .onAppear {
+                                        withAnimation(.easeInOut(duration: 0.1).repeatCount(9).delay(5).repeatForever()) {
+                                            hintWiggle = true
+                                        }
+                                    } //for wiggle effect animation
                             }
                         }
                         .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
@@ -127,6 +143,15 @@ struct GameplayView: View {
                                 .font(.largeTitle)
                                 .padding(.top, 50)
                                 .transition(.offset(y: -geo.size.height/4))
+                            //below are move transition mods (animate to invisible)
+                                .offset(x: movePointsToScore ? geo.size.width/2.3 : 0,
+                                        y: movePointsToScore ? -geo.size.height/13: 0)
+                                .opacity(movePointsToScore ? 0 : 1)
+                                .onAppear {
+                                    withAnimation(.easeInOut(duration: 1).delay(3)) {
+                                        movePointsToScore = true
+                                    }
+                                }
                         }
                     }
                     .animation(.easeInOut(duration: 1).delay(2), value: tappedCorrectAnswer)
@@ -144,14 +169,16 @@ struct GameplayView: View {
                     
                     Spacer()
                     
-                    Text("Answer 1")
-                        .minimumScaleFactor(0.5) //to specify minimum font size
-                        .multilineTextAlignment(.center) //text alignment when going multiline
-                        .padding(10)
-                        .frame(width: geo.size.width/2.15, height: 80)
-                        .background(.green.opacity(0.5))
-                        .clipShape(.rect(cornerRadius: 25))
-                        .scaleEffect(2)
+                    if tappedCorrectAnswer {
+                        Text("Answer 1")
+                            .minimumScaleFactor(0.5) //to specify minimum font size
+                            .multilineTextAlignment(.center) //text alignment when going multiline
+                            .padding(10)
+                            .frame(width: geo.size.width/2.15, height: 80)
+                            .background(.green.opacity(0.5))
+                            .clipShape(.rect(cornerRadius: 25))
+                            .scaleEffect(2)
+                    }
                     
                     Group {
                         Spacer()
@@ -167,6 +194,16 @@ struct GameplayView: View {
                             .tint(.blue.opacity(0.5))
                             .font(.largeTitle)
                             .transition(.offset(y: geo.size.height/3))
+                            .scaleEffect(scaleNextButton ? 1.2 : 1) //to add animation effect to this button using var "scalePlayButton"
+                            .onAppear {
+                                //to start animation of the button once it appears on the screen
+                                withAnimation(.easeInOut(duration: 1.3).repeatForever()) {
+                                    //easeInOut - after 1.3 duration to play this animation
+                                    //repeatForever - to repeat abv animation step forever
+                                    //keep toggling "scalePlayButton" value to keep button animated
+                                    scaleNextButton.toggle()
+                                }
+                            }
                         }
                     }
                     .animation(.easeInOut(duration: 2.7).delay(2.7), value: tappedCorrectAnswer)
