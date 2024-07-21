@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct GameplayView: View {
     //env var to dismiss the vw
     @Environment(\.dismiss) private var dismiss
     //to allow us to connect correct answers with celebration screen
     @Namespace private var namespace
+    
+    //audio player (for bg sound) and sfx player (for sound effects player)
+    @State private var musicPlayer: AVAudioPlayer!
+    @State private var sfxPlayer: AVAudioPlayer!
     
     //var to handle animations
     @State private var animateViewsIn = false
@@ -99,6 +104,9 @@ struct GameplayView: View {
                                         withAnimation(.easeOut(duration: 1)) {
                                             revealHint = true
                                         }
+                                        
+                                        //to play filp sound
+                                        playFlipSound()
                                     }
                                     .rotation3DEffect(
                                         .degrees(revealHint ? 1440 : 0), axis: (x: 0, y: 1, z: 0)
@@ -148,6 +156,9 @@ struct GameplayView: View {
                                         withAnimation(.easeOut(duration: 1)) {
                                             revealBook = true
                                         }
+                                        
+                                        //to play flip sound
+                                        playFlipSound()
                                     }
                                     .rotation3DEffect(
                                         .degrees(revealBook ? 1440 : 0), axis: (x: 0, y: 1, z: 0)
@@ -201,6 +212,9 @@ struct GameplayView: View {
                                                     withAnimation(.easeOut(duration: 1)) {
                                                         tappedCorrectAnswer = true
                                                     }
+                                                    
+                                                    //play correct sound when tapped on correct answer
+                                                    playCorrectSound()
                                                 }
                                         }
                                     }
@@ -225,6 +239,11 @@ struct GameplayView: View {
                                                     //adding id of wrong answer tapped to the list
                                                     wrongAnswersTapped.append(i)
                                                 }
+                                                
+                                                //to play tapping incorrect sound
+                                                playWrongSound()
+                                                //for haptic feedback
+                                                giveWrongFeedback()
                                             }
                                             .scaleEffect(wrongAnswersTapped.contains(i) ? 0.8 : 1)
                                         //when selected correct answer, this button to be faded and disabled
@@ -345,7 +364,67 @@ struct GameplayView: View {
         .ignoresSafeArea()
         .onAppear {
             animateViewsIn = true
+            //to play bg music when this vw loads
+            playMusic()
         }
+    }
+    
+    
+    //fn to get music file and setting it and playing it on audio player
+    private func playMusic() {
+        //list of all the songs that can be played as bg music
+        let songs = ["let-the-mystery-unfold", "spellcraft", "hiding-place-in-the-forest", "deep-in-the-dell"]
+        //to generate a random number to pick a random song
+        let i = Int.random(in: 0...3)
+        
+        //creating a pth for audio file, which needs to be played
+        let sound = Bundle.main.path(forResource: songs[i], ofType: "mp3")
+        //assigning abv obj to audio player
+        musicPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
+        //keeping volume to 10% to avoid distraction
+        musicPlayer.volume = 0.1
+        //to run this song in infinite loops use -1
+        musicPlayer.numberOfLoops = -1
+        //to play the audio player
+        musicPlayer.play()
+    }
+    
+    //fn for sound effect for flip (for hints)
+    private func playFlipSound() {
+        //creating a pth for audio file, which needs to be played
+        let sound = Bundle.main.path(forResource: "page-flip", ofType: "mp3")
+        //assigning abv obj to audio player
+        sfxPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
+        //to play this mp3
+        sfxPlayer.play()
+    }
+    
+    //fn for sound effect for wrong answer tapped
+    private func playWrongSound() {
+        //creating a pth for audio file, which needs to be played
+        let sound = Bundle.main.path(forResource: "negative-beeps", ofType: "mp3")
+        //assigning abv obj to audio player
+        sfxPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
+        //to play this mp3
+        sfxPlayer.play()
+    }
+    
+    //fn for sound effect for wrong answer tapped
+    private func playCorrectSound() {
+        //creating a pth for audio file, which needs to be played
+        let sound = Bundle.main.path(forResource: "magic-wand", ofType: "mp3")
+        //assigning abv obj to audio player
+        sfxPlayer = try! AVAudioPlayer(contentsOf: URL(filePath: sound!))
+        //to play this mp3
+        sfxPlayer.play()
+    }
+    
+    //to give haptic feedback when tapped on wrong answer 
+    private func giveWrongFeedback() {
+        //obj to create haptic feedback
+        let generator = UINotificationFeedbackGenerator()
+        //type of vibration specified
+        generator.notificationOccurred(.error)
     }
 }
 
