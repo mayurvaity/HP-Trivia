@@ -17,6 +17,9 @@ struct GameplayView: View {
     @State private var animateViewsIn = false
     //var used to trigger celebration screen
     @State private var tappedCorrectAnswer = false
+    //an array to maintain a list of tapped wrong answers
+    @State private var wrongAnswersTapped: [Int] = []
+    
     //var used in giving that wiggling effect to question mark
     @State private var hintWiggle = false
     //for animationg next level button
@@ -63,6 +66,8 @@ struct GameplayView: View {
                                 .multilineTextAlignment(.center)
                                 .padding()
                                 .transition(.scale)  //transition type for animation
+                            //when selected correct answer, the question text to be faded
+                                .opacity(tappedCorrectAnswer ? 0.1 : 1)
                         }
                     }
                     .animation(.easeIn(duration: 2), value: animateViewsIn) //animation specified with var it depends on
@@ -108,6 +113,9 @@ struct GameplayView: View {
                                             .opacity(revealHint ? 1 : 0)
                                             .scaleEffect(revealHint ? 1.33 : 1) //scaling animation when revealing
                                     )
+                                //when selected correct answer, this button to be faded and disabled
+                                    .opacity(tappedCorrectAnswer ? 0.1 : 1)
+                                    .disabled(tappedCorrectAnswer)
                             }
                         }
                         .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
@@ -154,6 +162,9 @@ struct GameplayView: View {
                                             .opacity(revealBook ? 1 : 0)
                                             .scaleEffect(revealBook ? 1.33 : 1) //scaling animation when revealing
                                     )
+                                //when selected correct answer, this button to be faded and disabled
+                                    .opacity(tappedCorrectAnswer ? 0.1 : 1)
+                                    .disabled(tappedCorrectAnswer)
                                 
                             }
                         }
@@ -202,9 +213,22 @@ struct GameplayView: View {
                                             .multilineTextAlignment(.center)
                                             .padding(10)
                                             .frame(width: geo.size.width/2.15, height: 80)
-                                            .background(.green.opacity(0.5))
+                                        //adjusting bg based on answer, checking if tapped wrong answer is already selected then red else keeping green
+                                            .background(wrongAnswersTapped.contains(i) ? .red.opacity(0.5) : .green.opacity(0.5))
                                             .clipShape(.rect(cornerRadius: 25))
                                             .transition(.scale)
+                                        //for selecting wrong answer
+                                            .onTapGesture {
+                                                withAnimation(.easeOut(duration: 1)) {
+                                                    //adding id of wrong answer tapped to the list
+                                                    wrongAnswersTapped.append(i)
+                                                }
+                                            }
+                                            .scaleEffect(wrongAnswersTapped.contains(i) ? 0.8 : 1)
+                                        //when selected correct answer, this button to be faded and disabled
+                                            .opacity(tappedCorrectAnswer ? 0.1 : 1)
+                                        //to disable this answer once wrong answer is tapped or correct answer is tapped
+                                            .disabled(wrongAnswersTapped.contains(i) || tappedCorrectAnswer)
                                     }
                                 }
                                 .animation(.easeOut(duration: 1).delay(1.5), value: animateViewsIn)
@@ -274,7 +298,19 @@ struct GameplayView: View {
                     VStack {
                         if tappedCorrectAnswer {
                             Button("Next Level>") {
-                                // TODO: next level button
+                                //reseting vars before moving to next question
+                                animateViewsIn = false
+                                tappedCorrectAnswer = false
+                                revealHint = false
+                                revealBook = false
+                                movePointsToScore = false
+                                wrongAnswersTapped = []
+                                
+                                //wait for 0.5 sec from now and execute the code within
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    //setting below var to allow next question to load on screen 
+                                    animateViewsIn = true
+                                }
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.blue.opacity(0.5))
