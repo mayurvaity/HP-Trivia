@@ -70,7 +70,9 @@ struct GameplayView: View {
                                 .opacity(tappedCorrectAnswer ? 0.1 : 1)
                         }
                     }
-                    .animation(.easeIn(duration: 2), value: animateViewsIn) //animation specified with var it depends on
+                    //animation modf suggests how a vw will appear and disappear, so need to specify differently for both cases like below (based on certain var)
+                    //below ternary conditions says we want animation to appear taking 2 sec and disappear in 0 sec (i.e. instantly)
+                    .animation(.easeInOut(duration: animateViewsIn ? 2 : 0), value: animateViewsIn) //animation specified with var it depends on
                     
                     Spacer()
                     
@@ -118,7 +120,7 @@ struct GameplayView: View {
                                     .disabled(tappedCorrectAnswer)
                             }
                         }
-                        .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
+                        .animation(.easeOut(duration: animateViewsIn ? 1.5 : 0).delay(animateViewsIn ? 2 : 0), value: animateViewsIn)
                         
                         Spacer()
                         
@@ -168,7 +170,7 @@ struct GameplayView: View {
                                 
                             }
                         }
-                        .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
+                        .animation(.easeOut(duration: animateViewsIn ? 1.5 : 0).delay(animateViewsIn ? 2 : 0), value: animateViewsIn)
                         
                     }
                     .padding(.bottom)
@@ -203,7 +205,7 @@ struct GameplayView: View {
                                         }
                                     }
                                 }
-                                .animation(.easeOut(duration: 1).delay(1.5), value: animateViewsIn)
+                                .animation(.easeOut(duration: animateViewsIn ? 1 : 0).delay(animateViewsIn ? 1.5 : 0), value: animateViewsIn)
                             } else {
                                 //below code for "INCORRECT" answer
                                 VStack {
@@ -231,7 +233,7 @@ struct GameplayView: View {
                                             .disabled(wrongAnswersTapped.contains(i) || tappedCorrectAnswer)
                                     }
                                 }
-                                .animation(.easeOut(duration: 1).delay(1.5), value: animateViewsIn)
+                                .animation(.easeOut(duration: animateViewsIn ? 1 : 0).delay(animateViewsIn ? 1.5 : 0), value: animateViewsIn)
                             }
                         }
                     }
@@ -273,7 +275,7 @@ struct GameplayView: View {
                                 .transition(.scale.combined(with: .offset(y: -geo.size.height/2))) // combined - to combine 2 diff types of animations together on this view
                         }
                     }
-                    .animation(.easeInOut(duration: 1).delay(1), value: tappedCorrectAnswer)
+                    .animation(.easeInOut(duration: tappedCorrectAnswer ? 1 : 0).delay(tappedCorrectAnswer ? 1 : 0), value: tappedCorrectAnswer)
                     
                     Spacer()
                     
@@ -328,7 +330,7 @@ struct GameplayView: View {
                             }
                         }
                     }
-                    .animation(.easeInOut(duration: 2.7).delay(2.7), value: tappedCorrectAnswer)
+                    .animation(.easeInOut(duration: tappedCorrectAnswer ? 2.7 : 0).delay(tappedCorrectAnswer ? 2.7 : 0), value: tappedCorrectAnswer)
                     
                     Group {
                         Spacer()
@@ -343,7 +345,6 @@ struct GameplayView: View {
         .ignoresSafeArea()
         .onAppear {
             animateViewsIn = true
-//            tappedCorrectAnswer = true
         }
     }
 }
