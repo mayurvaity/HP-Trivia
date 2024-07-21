@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct GameplayView: View {
+    //env var to dismiss the vw
+    @Environment(\.dismiss) private var dismiss
+    
     //var to handle animations
     @State private var animateViewsIn = false
     //var used to trigger celebration screen
@@ -18,6 +21,9 @@ struct GameplayView: View {
     @State private var scaleNextButton = false
     
     @State private var movePointsToScore = false
+    //vars for hints
+    @State private var revealHint = false
+    @State private var revealBook = false
     
     var body: some View {
         GeometryReader { geo in
@@ -32,7 +38,8 @@ struct GameplayView: View {
                     //MARK: - Controls
                     HStack {
                         Button("End Game") {
-                            //TODO: End game
+                            //to dismiss gameplay view
+                            dismiss()
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.red.opacity(0.5))
@@ -76,6 +83,27 @@ struct GameplayView: View {
                                             hintWiggle = true
                                         }
                                     } //for wiggle effect animation
+                                    //to create animation of 3d rotation when clicked on it
+                                    .onTapGesture {
+                                        withAnimation(.easeOut(duration: 1)) {
+                                            revealHint = true
+                                        }
+                                    }
+                                    .rotation3DEffect(
+                                        .degrees(revealHint ? 1440 : 0), axis: (x: 0, y: 1, z: 0)
+                                    )
+                                    .scaleEffect(revealHint ? 5 : 1)
+                                    .opacity(revealHint ? 0 : 1)
+                                    .offset(x: revealHint ? geo.size.width/2 : 0) //direction of flippng
+                                // to show hint once clicked on abv btn, at the place of the button
+                                    .overlay(
+                                        Text("The boy who ____")
+                                            .padding(.leading, 33)
+                                            .minimumScaleFactor(0.5)
+                                            .multilineTextAlignment(.center)
+                                            .opacity(revealHint ? 1 : 0)
+                                            .scaleEffect(revealHint ? 1.33 : 1) //scaling animation when revealing
+                                    )
                             }
                         }
                         .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
@@ -101,6 +129,28 @@ struct GameplayView: View {
                                             hintWiggle = true
                                         }
                                     } //for wiggle effect animation
+                                //to create animation of 3d rotation when clicked on it
+                                    .onTapGesture {
+                                        withAnimation(.easeOut(duration: 1)) {
+                                            revealBook = true
+                                        }
+                                    }
+                                    .rotation3DEffect(
+                                        .degrees(revealBook ? 1440 : 0), axis: (x: 0, y: 1, z: 0)
+                                    )
+                                    .scaleEffect(revealBook ? 5 : 1)
+                                    .opacity(revealBook ? 0 : 1)
+                                    .offset(x: revealBook ? -geo.size.width/2 : 0) //direction of flippng
+                                // to show hint once clicked on abv btn, at the place of the button
+                                    .overlay(
+                                        Image("hp1")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .padding(.trailing, 33)
+                                            .opacity(revealBook ? 1 : 0)
+                                            .scaleEffect(revealBook ? 1.33 : 1) //scaling animation when revealing
+                                    )
+                                
                             }
                         }
                         .animation(.easeOut(duration: 1.5).delay(2), value: animateViewsIn)
@@ -188,7 +238,7 @@ struct GameplayView: View {
                     VStack {
                         if tappedCorrectAnswer {
                             Button("Next Level>") {
-                                // TODO:
+                                // TODO: next level button
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.blue.opacity(0.5))
@@ -220,8 +270,8 @@ struct GameplayView: View {
         }
         .ignoresSafeArea()
         .onAppear {
-//            animateViewsIn = true
-            tappedCorrectAnswer = true
+            animateViewsIn = true
+//            tappedCorrectAnswer = true
         }
     }
 }
