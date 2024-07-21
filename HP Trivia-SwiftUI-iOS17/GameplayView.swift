@@ -10,6 +10,8 @@ import SwiftUI
 struct GameplayView: View {
     //env var to dismiss the vw
     @Environment(\.dismiss) private var dismiss
+    //to allow us to connect correct answers with celebration screen
+    @Namespace private var namespace
     
     //var to handle animations
     @State private var animateViewsIn = false
@@ -24,6 +26,8 @@ struct GameplayView: View {
     //vars for hints
     @State private var revealHint = false
     @State private var revealBook = false
+    
+    let tempAnswers = [true, false, false, false]
     
     var body: some View {
         GeometryReader { geo in
@@ -160,21 +164,51 @@ struct GameplayView: View {
                     
                     //MARK: - Answers
                     LazyVGrid(columns: [GridItem(), GridItem()]) {
-                        ForEach(1..<5) {
-                            i in
-                            VStack {
-                                if animateViewsIn {
-                                    Text(i == 3 ? "The boy who basically lived and got sent to his relatives house where he was treated quite badly if I'm being honest but yeah." : "Answer \(i)")
-                                        .minimumScaleFactor(0.5) //to specify minimum font size
-                                        .multilineTextAlignment(.center)
-                                        .padding(10)
-                                        .frame(width: geo.size.width/2.15, height: 80)
-                                        .background(.green.opacity(0.5))
-                                        .clipShape(.rect(cornerRadius: 25))
-                                        .transition(.scale)
+                        ForEach(1..<5) { i in
+                            if tempAnswers[i-1] == true {
+                                //below code for "CORRECT" answer
+                                VStack {
+                                    if animateViewsIn {
+                                        if tappedCorrectAnswer == false {
+                                            Text("Answer \(i)")
+                                                .minimumScaleFactor(0.5) //to specify minimum font size
+                                                .multilineTextAlignment(.center)
+                                                .padding(10)
+                                                .frame(width: geo.size.width/2.15, height: 80)
+                                                .background(.green.opacity(0.5))
+                                                .clipShape(.rect(cornerRadius: 25))
+                                            //specifying diff transitions for gameplay vw and celebration vw
+                                            //insertion - for gameplay vw
+                                            //removal - for celebration vw
+                                                .transition(.asymmetric(insertion: .scale, removal: .scale(scale: 5).combined(with: .opacity.animation(.easeOut(duration: 0.5)))))
+                                            //for correct answer
+                                                .matchedGeometryEffect(id: "answer", in: namespace)
+                                            //for tapping on the button
+                                                .onTapGesture {
+                                                    withAnimation(.easeOut(duration: 1)) {
+                                                        tappedCorrectAnswer = true
+                                                    }
+                                                }
+                                        }
+                                    }
                                 }
+                                .animation(.easeOut(duration: 1).delay(1.5), value: animateViewsIn)
+                            } else {
+                                //below code for "INCORRECT" answer
+                                VStack {
+                                    if animateViewsIn {
+                                        Text("Answer \(i)")
+                                            .minimumScaleFactor(0.5) //to specify minimum font size
+                                            .multilineTextAlignment(.center)
+                                            .padding(10)
+                                            .frame(width: geo.size.width/2.15, height: 80)
+                                            .background(.green.opacity(0.5))
+                                            .clipShape(.rect(cornerRadius: 25))
+                                            .transition(.scale)
+                                    }
+                                }
+                                .animation(.easeOut(duration: 1).delay(1.5), value: animateViewsIn)
                             }
-                            .animation(.easeOut(duration: 1).delay(1.5), value: animateViewsIn)
                         }
                     }
                     
@@ -228,6 +262,8 @@ struct GameplayView: View {
                             .background(.green.opacity(0.5))
                             .clipShape(.rect(cornerRadius: 25))
                             .scaleEffect(2)
+                        //for correct answer (linking with main vw)
+                            .matchedGeometryEffect(id: "answer", in: namespace)
                     }
                     
                     Group {
