@@ -9,6 +9,9 @@ import SwiftUI
 import AVKit
 
 struct ContentView: View {
+    //env obj containing store class obj
+    @EnvironmentObject private var store: Store
+    
     //creating audio player obj
     @State private var audioPlayer: AVAudioPlayer!
     
@@ -185,6 +188,7 @@ struct ContentView: View {
                                 .sheet(isPresented: $showSettings, content: {
                                     //showing SettingsView as Modal based on value of "showSettings" var
                                     SettingsView()
+                                        .environmentObject(store) //passing store obj which we got from env (from App file) 
                                 })
                             }
                         }
@@ -228,4 +232,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(Store()) //creating a store obj and passing for preview 
 }

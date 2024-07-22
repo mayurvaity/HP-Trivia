@@ -365,7 +365,7 @@ struct GameplayView: View {
         .onAppear {
             animateViewsIn = true
             //to play bg music when this vw loads
-            playMusic()
+//            playMusic()
         }
     }
     

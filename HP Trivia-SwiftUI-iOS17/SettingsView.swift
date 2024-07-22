@@ -7,17 +7,12 @@
 
 import SwiftUI
 
-enum BookStatus {
-    case active
-    case inactive
-    case locked
-}
-
 struct SettingsView: View {
     //env property to dismiss this vw
     @Environment(\.dismiss) private var dismiss
-    //var to store bookstatus for each book
-    @State private var books: [BookStatus] = [.active, .active, .inactive, .locked, .locked, .locked, .locked]
+    
+    //env obj containing store class obj
+    @EnvironmentObject private var store: Store
     
     var body: some View {
         ZStack {
@@ -37,7 +32,7 @@ struct SettingsView: View {
                         
                         ForEach(0..<7) { i in
                             //book state 1 - selected book (unlocked and selected)
-                            if books[i] == .active {
+                            if store.books[i] == .active {
                                 //alignment: .bottomTrailing - to align all content in this vw bottom-right corner (in this case to add tick mark image at bottom-right corner of the book)
                                 ZStack(alignment: .bottomTrailing) {
                                     //book image
@@ -57,12 +52,12 @@ struct SettingsView: View {
                                 }
                                 .onTapGesture {
                                     //to change status to inactive when tapped on an active book
-                                    books[i] = .inactive
+                                    store.books[i] = .inactive
                                 }
                             }
                             
                             //book state 2 - unselected and unlocked
-                            if books[i] == .inactive {
+                            if store.books[i] == .inactive {
                                 ZStack(alignment: .bottomTrailing) {
                                     //book image
                                     //image name derived using i
@@ -82,12 +77,12 @@ struct SettingsView: View {
                                 }
                                 .onTapGesture {
                                     //to change status to active when tapped on an inactive book
-                                    books[i] = .active
+                                    store.books[i] = .active
                                 }
                             }
                             
                             //book state 3 -  locked
-                            if books[i] == .locked {
+                            if store.books[i] == .locked {
                                 ZStack {
                                     //book image
                                     //image name derived using i
@@ -123,4 +118,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(Store())  //creating a store obj and passing for preview 
 }
