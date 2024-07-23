@@ -10,6 +10,10 @@ import SwiftUI
 
 enum Constants {
     static let hpFont = "PartyLetPlain"
+    
+    //sample question for preview,
+    //decoding data from trivia file ans getting 1st element of the array
+    static let previewQuestion = try! JSONDecoder().decode([Question].self, from: Data(contentsOf: URL(Bundle.main.url(forResource: "trivia", withExtension: "json")!)))[0]
 }
 
 //reusable bg image view 

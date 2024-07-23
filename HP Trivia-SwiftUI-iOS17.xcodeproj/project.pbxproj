@@ -23,6 +23,7 @@
 		0D6A45542C46E8F800C5129B /* spellcraft.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0D6A454C2C46E8F800C5129B /* spellcraft.mp3 */; };
 		0D6A45562C47072A00C5129B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6A45552C47072A00C5129B /* Constants.swift */; };
 		0D7846F12C49786B00F5A95C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7846F02C49786B00F5A95C /* SettingsView.swift */; };
+		0DB693B72C50085A0043914D /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB693B62C50085A0043914D /* Question.swift */; };
 		0DC13EC42C4AD1660001033C /* GameplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC13EC32C4AD1660001033C /* GameplayView.swift */; };
 		0DDB063E2C496EAD0045BF00 /* InstructionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DDB063D2C496EAD0045BF00 /* InstructionsView.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +47,7 @@
 		0D6A454C2C46E8F800C5129B /* spellcraft.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = spellcraft.mp3; sourceTree = "<group>"; };
 		0D6A45552C47072A00C5129B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		0D7846F02C49786B00F5A95C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		0DB693B62C50085A0043914D /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		0DC13EC32C4AD1660001033C /* GameplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameplayView.swift; sourceTree = "<group>"; };
 		0DDB063D2C496EAD0045BF00 /* InstructionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,6 +87,7 @@
 				0DC13EC32C4AD1660001033C /* GameplayView.swift */,
 				0D7846F02C49786B00F5A95C /* SettingsView.swift */,
 				0DDB063D2C496EAD0045BF00 /* InstructionsView.swift */,
+				0DB693B62C50085A0043914D /* Question.swift */,
 				0D4DD9452C4EAFDA00ABD774 /* Store.swift */,
 				0D6A45552C47072A00C5129B /* Constants.swift */,
 				0D4DD9442C4EAE2800ABD774 /* HPConfig.storekit */,
@@ -191,6 +194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D4DD9462C4EAFDA00ABD774 /* Store.swift in Sources */,
+				0DB693B72C50085A0043914D /* Question.swift in Sources */,
 				0DC13EC42C4AD1660001033C /* GameplayView.swift in Sources */,
 				0D7846F12C49786B00F5A95C /* SettingsView.swift in Sources */,
 				0D6A45382C46E79B00C5129B /* ContentView.swift in Sources */,
