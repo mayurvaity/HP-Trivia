@@ -11,6 +11,9 @@ import AVKit
 struct GameplayView: View {
     //env var to dismiss the vw
     @Environment(\.dismiss) private var dismiss
+    //env obj containing game vm obj
+    @EnvironmentObject private var game: Game
+    
     //to allow us to connect correct answers with celebration screen
     @Namespace private var namespace
     
@@ -430,4 +433,5 @@ struct GameplayView: View {
 
 #Preview {
     GameplayView()
+        .environmentObject(Game()) 
 }

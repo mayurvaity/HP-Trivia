@@ -11,6 +11,8 @@ import AVKit
 struct ContentView: View {
     //env obj containing store class obj
     @EnvironmentObject private var store: Store
+    //env obj containing game vm obj
+    @EnvironmentObject private var game: Game
     
     //creating audio player obj
     @State private var audioPlayer: AVAudioPlayer!
@@ -161,6 +163,7 @@ struct ContentView: View {
                                 .transition(.offset(y: geo.size.height/3)) //to specify what kind of transition it requires
                                 .fullScreenCover(isPresented: $playGame, content: {
                                     GameplayView()
+                                        .environmentObject(game)
                                 }) //fullScreenCover - to open vw in full screen
                             }
                         }
@@ -233,4 +236,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(Store()) //creating a store obj and passing for preview 
+        .environmentObject(Game()) //creating a game obj and passing for preview
 }
