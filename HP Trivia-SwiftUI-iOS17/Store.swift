@@ -42,6 +42,13 @@ class Store: ObservableObject {
         do {
             //getting all the products using list of product ids
             products = try await Product.products(for: productIDs)
+            //sorting products by id (hp4, hp5, etc.)
+            products.sort(by: {$0.id < $1.id})
+            
+            for product in products {
+                print(product.id)
+            }
+            
         } catch {
             print("Couldn't fetch those products: \(error)")
         }
@@ -51,6 +58,7 @@ class Store: ObservableObject {
     //fn to purchase selected product
     func purchase(_ product: Product) async {
         do {
+            
             //try to purchase selected product
             let result = try await product.purchase()
             
@@ -81,6 +89,7 @@ class Store: ObservableObject {
             @unknown default:
                 break
             }
+            
         } catch {
             print("Couldn't purchase that product, \(error)")
         }
@@ -96,7 +105,11 @@ class Store: ObservableObject {
         for product in products {
             //this gets the state (verificationResult) of the current product purchased
             //if purchase is success it returns a value otherwise it moves to else part
-            guard let state = await product.currentEntitlement else { return }
+            guard let state = await product.currentEntitlement else {
+                print("This product is not purchased: \(product.id)")
+                continue
+//                return
+            }
             
             //for success type purchases, there are 2 types of state (verificationResult)
             //need to deal with them separately
@@ -112,12 +125,16 @@ class Store: ObservableObject {
                 if signedType.revocationDate == nil {
                     //adding purchased product ID to the set
                     purchasedIDs.insert(signedType.productID)
+                    print("Product ID: \(signedType.productID) is purchased")
                 } else {
                     //handling revocation case here, by removing product ID from the set
                     purchasedIDs.remove(signedType.productID)
                 }
             }
+            
         }
+        
+       
     }
     
     
@@ -130,6 +147,7 @@ class Store: ObservableObject {
             for await _ in Transaction.updates {
                 //here running our checkPurchased fn to get updates
                 await checkPurchased()
+                
             }
         }
     }

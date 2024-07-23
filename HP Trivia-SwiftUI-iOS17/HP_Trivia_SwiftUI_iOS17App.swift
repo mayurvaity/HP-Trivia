@@ -16,6 +16,10 @@ struct HP_Trivia_SwiftUI_iOS17App: App {
         WindowGroup {
             ContentView()
                 .environmentObject(store) //passing store as an env obj 
+                .task {
+                    //to load all the products as soon as app loads
+                    await store.loadProducts() 
+                }
         }
     }
 }

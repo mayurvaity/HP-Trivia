@@ -32,7 +32,8 @@ struct SettingsView: View {
                         
                         ForEach(0..<7) { i in
                             //book state 1 - selected book (unlocked and selected)
-                            if store.books[i] == .active {
+                            //also checking for locked but purchased
+                            if store.books[i] == .active || (store.books[i] == .locked && store.purchasedIDs.contains("hp\(i+1)")) {
                                 //alignment: .bottomTrailing - to align all content in this vw bottom-right corner (in this case to add tick mark image at bottom-right corner of the book)
                                 ZStack(alignment: .bottomTrailing) {
                                     //book image
@@ -50,14 +51,16 @@ struct SettingsView: View {
                                         .shadow(radius: 1)
                                         .padding(3)
                                 }
+                                .task {
+                                    //making aleady active and (locked but active) books active
+                                    store.books[i] = .active
+                                }
                                 .onTapGesture {
                                     //to change status to inactive when tapped on an active book
                                     store.books[i] = .inactive
                                 }
-                            }
-                            
-                            //book state 2 - unselected and unlocked
-                            if store.books[i] == .inactive {
+                            } //book state 2 - unselected and unlocked
+                            else if store.books[i] == .inactive {
                                 ZStack(alignment: .bottomTrailing) {
                                     //book image
                                     //image name derived using i
@@ -79,10 +82,8 @@ struct SettingsView: View {
                                     //to change status to active when tapped on an inactive book
                                     store.books[i] = .active
                                 }
-                            }
-                            
-                            //book state 3 -  locked
-                            if store.books[i] == .locked {
+                            } else {
+                                //book state 3 -  locked
                                 ZStack {
                                     //book image
                                     //image name derived using i
@@ -98,6 +99,19 @@ struct SettingsView: View {
                                         .imageScale(.large)
                                         .shadow(color: .white, radius: 3)
                                 }
+                                .onTapGesture {
+                                    //creating Product obj of selected book
+                                    let product = store.products[i-3]
+                                    
+                                    print("Selected product from store list: \(product)")
+                                    
+                                    //async fn needs to be run within a Task
+                                    Task {
+                                        //calling fn to purchase the selected product
+                                        await store.purchase(product)
+                                    }
+                                }
+                                
                             }
                         }
                         
