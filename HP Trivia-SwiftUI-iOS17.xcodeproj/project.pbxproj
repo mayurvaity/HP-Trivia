@@ -89,7 +89,7 @@
 				0DC13EC32C4AD1660001033C /* GameplayView.swift */,
 				0D7846F02C49786B00F5A95C /* SettingsView.swift */,
 				0DDB063D2C496EAD0045BF00 /* InstructionsView.swift */,
-				0DB693B82C5010660043914D /* Game.swift */,
+				0D7AD8B12C50DF380059A1CF /* ViewModels */,
 				0D4DD9452C4EAFDA00ABD774 /* Store.swift */,
 				0DB693B62C50085A0043914D /* Question.swift */,
 				0D6A45552C47072A00C5129B /* Constants.swift */,
@@ -115,6 +115,14 @@
 				0D6A453C2C46E79C00C5129B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		0D7AD8B12C50DF380059A1CF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				0DB693B82C5010660043914D /* Game.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -24,6 +24,15 @@ class Game: ObservableObject {
     //var to keep current question, initializing it with sample question
     var currentQuestion = Constants.previewQuestion
     
+    //var to keep answers (as an array) (for displaying on vw)
+    var answers: [String] = []
+    
+    //calculated var to get correct answer from currentQuestion
+    var correctAnswer: String {
+        //finding answer where value is true and getting its key as correct answer 
+        currentQuestion.answers.first(where: { $0.value == true })!.key
+    }
+    
     init() {
         //to gather data from trivia file, as soon as a new obj is created
         decodeQuestions()
@@ -55,6 +64,25 @@ class Game: ObservableObject {
         }
         //making selected question currentQuestion
         currentQuestion = potentialQuestion
+        
+        //emptying answers array for new question's answers
+        answers = []
+        
+        //getting answers list from currentQuestion obj and putting them in the array of answers
+        for answer in currentQuestion.answers.keys {
+            answers.append(answer)
+        }
+        
+        //shuffling answers
+        answers.shuffle()
+    }
+    
+    //fn to exec when user gives correct answer to the question
+    func correct() {
+        //appending currentQuestion to the answeredQuestions list
+        answeredQuestions.append(currentQuestion.id)
+        
+        // TODO: update the score
     }
     
     //fn to decode questions data from trivia file and store in abv var
