@@ -137,6 +137,10 @@ struct ContentView: View {
                             //putting all the vws involved in the animation within a if statement driven by "animateViewsIn" var
                             if animateViewsIn {
                                 Button {
+                                    //filtering questions using active books and preparing new question 
+                                    filterQuestions()
+                                    //calling fn to prepare for a new game
+                                    game.startGame()
                                     //start a new game
                                     playGame.toggle()
                                 } label: {
@@ -145,7 +149,8 @@ struct ContentView: View {
                                         .foregroundStyle(.white)
                                         .padding(.vertical, 7)
                                         .padding(.horizontal, 50)
-                                        .background(.brown)
+                                        //changing button color based on active books
+                                        .background(store.books.contains(.active) ? .brown : .gray)
                                         .clipShape(.rect(cornerRadius: 7))
                                         .shadow(radius: 5)
                                 }
@@ -165,6 +170,8 @@ struct ContentView: View {
                                     GameplayView()
                                         .environmentObject(game)
                                 }) //fullScreenCover - to open vw in full screen
+                                //to disable the button if no book is active
+                                .disabled(store.books.contains(.active) ? false : true)
                             }
                         }
                         .animation(.easeOut(duration: 0.7).delay(2), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
@@ -198,11 +205,24 @@ struct ContentView: View {
                         .animation(.easeOut(duration: 0.7).delay(2.7), value: animateViewsIn) //to specify animation interval and manage "animateViewsIn" var
                         //it is suppose to fly in right after view loads (delay of 2.7 sec, and duration of animation is 0.7) and stay there
                         
-                        
-                        
                         Spacer()
                     }
                     .frame(width: geo.size.width)
+                    
+                    //if no book is selected, this message will show up on the screen
+                    VStack {
+                        //chekcing if animateViewsIn is true (i.e. to perform animations)
+                        if animateViewsIn {
+                            //checking if any book is active
+                            if store.books.contains(.active) == false {
+                                //message
+                                Text("No questions available. Go to settings. ⬆️")
+                                    .multilineTextAlignment(.center)
+                                    .transition(.opacity)
+                            }
+                        }
+                    }
+                    .animation(.easeInOut.delay(3), value: animateViewsIn) //animations config w delay and var on which animation is based upon
                     
                     Spacer()
                 }
@@ -231,6 +251,24 @@ struct ContentView: View {
         //to play the audio player
         audioPlayer.play()
     }
+    
+    //fn to filter questions on the basis of active books
+    private func filterQuestions() {
+        //list of ids of enabled books
+        var books: [Int] = []
+        
+        //enumerated - returns index of the element and value of the element in the array
+        for (index, status) in store.books.enumerated() {
+            if status == .active {
+                books.append(index + 1)
+            }
+        }
+        //to call fn to filter questions by books
+        game.filterQuestions(to: books)
+        //to get a new question (using new filteredQuestions list)
+        game.newQuestion()
+    }
+    
 }
 
 #Preview {
