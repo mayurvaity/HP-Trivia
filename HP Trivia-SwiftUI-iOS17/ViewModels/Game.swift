@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI 
 
 //this is a view model
 
@@ -31,7 +32,7 @@ class Game: ObservableObject {
     //var to keep current question, initializing it with sample question
     var currentQuestion = Constants.previewQuestion
     
-    //var to keep answers (as an array) (for displaying on vw)
+    //var to keep answers keys (as an array) (for displaying on vw) (from currentquestion) 
     var answers: [String] = []
     
     //calculated var to get correct answer from currentQuestion
@@ -99,8 +100,11 @@ class Game: ObservableObject {
         //appending currentQuestion to the answeredQuestions list
         answeredQuestions.append(currentQuestion.id)
         
-        //everytime they tap the correct answer, need to add it in total game score
-        gameScore += questionScore
+        //to perform animation while updating scores 
+        withAnimation {
+            //everytime they tap the correct answer, need to add it in total game score
+            gameScore += questionScore
+        }
     }
     
     //while ending the game, adding total score to recent scores list 
