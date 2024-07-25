@@ -22,6 +22,10 @@ struct HP_Trivia_SwiftUI_iOS17App: App {
                 .task {
                     //to load all the products as soon as app loads
                     await store.loadProducts() 
+                    //to load recent scores as soon as app loads
+                    game.loadScores() 
+                    //to load book status data as soon as app loads (from user defaults)
+                    store.loadStatus()
                 }
         }
     }

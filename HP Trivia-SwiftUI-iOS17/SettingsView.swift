@@ -54,10 +54,14 @@ struct SettingsView: View {
                                 .task {
                                     //making aleady active and (locked but active) books active
                                     store.books[i] = .active
+                                    //fn to save statuses to userdefaults
+                                    store.saveStatus()
                                 }
                                 .onTapGesture {
                                     //to change status to inactive when tapped on an active book
                                     store.books[i] = .inactive
+                                    //fn to save statuses to userdefaults
+                                    store.saveStatus()
                                 }
                             } //book state 2 - unselected and unlocked
                             else if store.books[i] == .inactive {
@@ -81,6 +85,8 @@ struct SettingsView: View {
                                 .onTapGesture {
                                     //to change status to active when tapped on an inactive book
                                     store.books[i] = .active
+                                    //fn to save statuses to userdefaults
+                                    store.saveStatus()
                                 }
                             } else {
                                 //book state 3 -  locked
@@ -110,6 +116,7 @@ struct SettingsView: View {
                                         //calling fn to purchase the selected product
                                         await store.purchase(product)
                                     }
+                                    //not saving status here, as it will get handled in .active sction abv 
                                 }
                                 
                             }
@@ -126,6 +133,7 @@ struct SettingsView: View {
                 .doneButton()
                 
             }
+            .foregroundColor(.black) //to assign default font color for everything in the abv vstack (to make this vw look ok in dark mode)
         }
     }
 }

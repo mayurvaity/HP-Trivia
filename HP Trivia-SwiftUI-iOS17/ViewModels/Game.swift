@@ -25,6 +25,8 @@ class Game: ObservableObject {
     
     //an array to keep list of answered questions
     private var answeredQuestions: [Int] = []
+    //path to save scores
+    private let savePath = FileManager.documentsDirectory.appending(path: "SavedScores")
     
     //to keep colln of filtered qestions (by selected books)
     var filteredQuestions: [Question] = []
@@ -112,6 +114,33 @@ class Game: ObservableObject {
         recentScores[2] = recentScores[1]
         recentScores[1] = recentScores[0]
         recentScores[0] = gameScore
+        
+        //while ending, saving scores to defaults
+        saveScores()
+    }
+    
+    //fn to load recent scores data from userDefaults 
+    func loadScores() {
+        do {
+            //getting recent scores data from abv path (into Data format)
+            let data = try Data(contentsOf: savePath)
+            //decoding recent scores data from Data format into an array of Int
+            recentScores = try JSONDecoder().decode([Int].self, from: data)
+        } catch {
+            recentScores = [0, 0, 0]
+        }
+    }
+    
+    //fn to save recent scores
+    private func saveScores() {
+        do {
+            //encoding recentScores array into Data format
+            let data = try JSONEncoder().encode(recentScores)
+            //write this data to defaults path created abv
+            try data.write(to: savePath)
+        } catch {
+            print("Error saving score data, \(error)")
+        }
     }
     
     //fn to decode questions data from trivia file and store in abv var

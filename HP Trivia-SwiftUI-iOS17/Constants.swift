@@ -39,3 +39,12 @@ extension Button {
             .foregroundStyle(.white)
     }
 }
+
+//extension to get documents directory
+extension FileManager {
+    //path to save to defaults 
+    static var documentsDirectory: URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+}

@@ -83,9 +83,9 @@ struct ContentView: View {
                                 Text("Recent Scores")
                                     .font(.title2)
                                 
-                                Text("33")
-                                Text("27")
-                                Text("15")
+                                Text("\(game.recentScores[0])")
+                                Text("\(game.recentScores[1])")
+                                Text("\(game.recentScores[2])")
                             }
                             .font(.title3)
                             .padding(.horizontal)
@@ -169,6 +169,14 @@ struct ContentView: View {
                                 .fullScreenCover(isPresented: $playGame, content: {
                                     GameplayView()
                                         .environmentObject(game)
+                                        .onAppear {
+                                            //on appearance of gameplay vw, bg music from content view should fade away in 2 seconds
+                                            audioPlayer.setVolume(0, fadeDuration: 2)
+                                        }
+                                        .onDisappear {
+                                            //on coming back from gameplay vw, bg music should get enabled again (come in from fade to full in duration of 3 sec) 
+                                            audioPlayer.setVolume(1, fadeDuration: 3)
+                                        }
                                 }) //fullScreenCover - to open vw in full screen
                                 //to disable the button if no book is active
                                 .disabled(store.books.contains(.active) ? false : true)
@@ -233,7 +241,7 @@ struct ContentView: View {
         .ignoresSafeArea()
         .onAppear {
             //to start playing audio from audioplayer, once this view appears on the screen
-//            playAudio()
+            playAudio()
             
             //to enable title vws animation fying in on screen when app loads
             animateViewsIn = true

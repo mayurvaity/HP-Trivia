@@ -9,7 +9,7 @@ import Foundation
 import StoreKit
 
 //enum of book statuses
-enum BookStatus {
+enum BookStatus: Codable {
     case active
     case inactive
     case locked
@@ -31,6 +31,9 @@ class Store: ObservableObject {
     
     //to monitor updates outside the app, using this var to store return data
     private var updates: Task<Void, Never>? = nil
+    
+    //path to save book statuses
+    private let savePath = FileManager.documentsDirectory.appending(path: "SavedBookStatus")
     
     init() {
         //to monitor updates outside the app, calling this fn
@@ -92,6 +95,31 @@ class Store: ObservableObject {
             
         } catch {
             print("Couldn't purchase that product, \(error)")
+        }
+    }
+    
+    //fn to save book statuses data
+    func saveStatus() {
+        do {
+            //encoding book statuses data and keeping it in Data format
+            let data = try JSONEncoder().encode(books)
+            //writing this data to abv created userDefaults path
+            try data.write(to: savePath)
+        } catch {
+            print("Error saving Book status data, \(error)")
+        }
+    }
+    
+    //fn to load statuses data from userDefaults
+    func loadStatus() {
+        do {
+            //getting data from userDefaults path into Data format
+            let data = try Data(contentsOf: savePath)
+            //decoding data from Data format into a BookStatus array 
+            books = try JSONDecoder().decode([BookStatus].self, from: data)
+        } catch {
+            print("Error loading book statuses, \(error)")
+            //no need to set default values to books var here, as they are getting initailized abv 
         }
     }
     

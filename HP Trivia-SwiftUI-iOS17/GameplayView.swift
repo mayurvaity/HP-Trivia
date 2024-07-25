@@ -392,8 +392,10 @@ struct GameplayView: View {
         .ignoresSafeArea()
         .onAppear {
             animateViewsIn = true
-            //to play bg music when this vw loads
-//            playMusic()
+            //to play bg music when this vw loads, wait 3 sec and then start playing music
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                playMusic()
+            }
         }
     }
     
